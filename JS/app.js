@@ -26,7 +26,7 @@ function normalizeImageUrl(url) {
   const lh3Match = trimmed.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
   const id = googleDriveMatch?.[1] || googleDriveUcmatch?.[1] || lh3Match?.[1];
   if (id) {
-    return `https://drive.google.com/uc?export=view&id=${id}`;
+    return `https://lh3.googleusercontent.com/d/${id}`;
   }
   return trimmed;
 }
@@ -105,7 +105,7 @@ function renderHome() {
     items.slice(0, 8).forEach((product) => {
       const item = el(`
         <div class="product" data-id="${product.id}">
-          <img class="product-thumb" src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/320x240?text=No+Image'" />
+          <img class="product-thumb" src="${product.image}" alt="${product.name}" />
           <div class="product-meta">
             <h3>${product.name}</h3>
             <p>${product.price} • ${product.category}</p>
@@ -143,7 +143,7 @@ function renderProducts() {
     items.forEach((product) => {
       const card = el(`
         <div class="grid-item" data-id="${product.id}">
-          <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/320x240?text=No+Image'" />
+          <img src="${product.image}" alt="${product.name}" />
           <div>
             <h3>${product.name}</h3>
             <p class="small">${product.price}</p>
@@ -207,7 +207,7 @@ function renderProductDetail(id) {
   const partner = state.partners.find((item) => item.id === product.partnerId);
   view.innerHTML = `
     <div class="card">
-      <img class="card-image" src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/320x240?text=No+Image'" />
+      <img class="card-image" src="${product.image}" alt="${product.name}" />
       <h2>${product.name}</h2>
       <p class="small">${product.price} • ${product.category}</p>
       <p class="small">Stok: ${product.stock}</p>
@@ -257,7 +257,7 @@ function renderPartnerDetail(id) {
   partnerProducts.forEach((product) => {
     const item = el(`
       <div class="grid-item" data-id="${product.id}">
-        <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/320x240?text=No+Image'" />
+        <img src="${product.image}" alt="${product.name}" />
         <div>
           <h3>${product.name}</h3>
           <p class="small">${product.price}</p>

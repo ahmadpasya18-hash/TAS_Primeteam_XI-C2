@@ -18,6 +18,19 @@ function setActiveNav(route) {
   });
 }
 
+function normalizeImageUrl(url) {
+  if (!url) return '';
+  const trimmed = url.trim();
+  const googleDriveMatch = trimmed.match(/drive\.google\.com\/d\/([a-zA-Z0-9_-]+)/);
+  const googleDriveUcmatch = trimmed.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  const lh3Match = trimmed.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+  const id = googleDriveMatch?.[1] || googleDriveUcmatch?.[1] || lh3Match?.[1];
+  if (id) {
+    return `https://drive.google.com/uc?export=view&id=${id}`;
+  }
+  return trimmed;
+}
+
 function normalizeProduct(item) {
   return {
     id: item.produk_id,
@@ -25,7 +38,7 @@ function normalizeProduct(item) {
     price: item.produk_price,
     stock: item.produk_stock,
     category: item.produk_category,
-    image: item.produk_image,
+    image: normalizeImageUrl(item.produk_image),
     partnerId: item.mitra_id,
     school: item.sekolah
   };

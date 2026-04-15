@@ -66,7 +66,13 @@ async function loadData() {
     state.partners = partnersRaw.map(normalizePartner);
   } catch (error) {
     console.error('Gagal memuat data:', error);
-    view.innerHTML = '<div class="card">Tidak dapat memuat data. Pastikan file JSON berada di folder DATA dan jalankan dengan Live Server.</div>';
+    // Fallback data dummy
+    state.products = [
+      { id: 'dummy1', name: 'Produk Dummy 1', price: 'Rp10.000', image: 'https://via.placeholder.com/300x200?text=Dummy1', category: 'Food', partnerId: 'dummy_partner' }
+    ];
+    state.partners = [
+      { id: 'dummy_partner', name: 'Mitra Dummy', category: 'Food & Beverage', address: 'Alamat Dummy' }
+    ];
   }
 }
 

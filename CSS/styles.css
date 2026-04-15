@@ -88,7 +88,7 @@ header {
 }
 main {
   padding: 16px;
-  padding-bottom: 98px;
+  padding-bottom: 100px;
   flex: 1;
 }
 .card {
@@ -231,13 +231,22 @@ main {
 .nav-btn {
   border: none;
   background: none;
-  padding: 10px 14px;
-  border-radius: 999px;
+  padding: 8px 6px;
+  border-radius: 12px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 60px;
+}
+.nav-icon {
+  width: 20px;
+  height: 20px;
 }
 .nav-btn:hover {
   transform: scale(1.05);

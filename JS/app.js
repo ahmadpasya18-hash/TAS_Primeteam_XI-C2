@@ -86,8 +86,8 @@ function renderHome() {
   view.innerHTML = `
     <div class="banner card">
       <div>
-        <strong>Temukan produk lokal</strong>
-        <p class="small">Mitra sekolah siap melayani Anda.</p>
+        <strong>Kantin Bu Suryati</strong>
+        <p class="small">Temukan produk lokal favorit Anda.</p>
       </div>
     </div>
     <div class="search-bar">
@@ -401,9 +401,14 @@ window.addEventListener('hashchange', router);
 
 (async function init() {
   await loadData();
-  if (!window.location.hash) {
-    navigate('home');
-  } else {
-    router();
-  }
+  // Show splash for 3 seconds
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    if (!window.location.hash) {
+      navigate('home');
+    } else {
+      router();
+    }
+  }, 3000);
 })();

@@ -1,12 +1,12 @@
 :root {
-  --bg: #eef5ff;
+  --bg: #ACD3F0;
   --surface: #ffffff;
-  --accent: #3b82f6;
-  --accent-soft: #dbeafe;
+  --accent: #ACD3F0;
+  --accent-soft: #e0f2fe;
   --text: #0f172a;
   --muted: #64748b;
   --border: #d1d5db;
-  --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  --shadow: 0 20px 60px rgba(172, 211, 240, 0.15);
 }
 * {
   box-sizing: border-box;
@@ -20,7 +20,7 @@ body,
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
   color: var(--text);
 }
 #app {
@@ -28,6 +28,50 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
+.hidden {
+  display: none;
+}
+.hidden {
+  display: none;
+}
+.splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--bg), #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.splash-content {
+  text-align: center;
+}
+.splash-content h1 {
+  font-size: 32px;
+  color: var(--text);
+  margin: 0;
+  animation: bounce 2s infinite;
+}
+.splash-subtitle {
+  font-size: 16px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
 header {
   position: sticky;
   top: 0;
@@ -106,8 +150,8 @@ main {
 .product-list .product:hover,
 .partner-list .partner:hover {
   transform: translateY(-1px);
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.08);
+  border-color: var(--accent);
+  box-shadow: 0 12px 30px rgba(172, 211, 240, 0.2);
 }
 .grid-item {
   display: block;
@@ -193,11 +237,14 @@ main {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+}
+.nav-btn:hover {
+  transform: scale(1.05);
 }
 .nav-btn.active {
   color: var(--accent);
-  background: rgba(59, 130, 246, 0.14);
+  background: rgba(172, 211, 240, 0.2);
 }
 .actions {
   display: flex;
@@ -214,17 +261,42 @@ main {
   color: var(--text);
   cursor: pointer;
   min-width: 96px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 .btn:hover,
 .btn-secondary:hover,
 .btn-primary:hover {
   transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+}
+.btn:active {
+  transform: translateY(0);
 }
 .btn-primary {
   background: var(--accent);
   color: #ffffff;
   border: none;
+}
+.btn-primary:hover {
+  background: #9bc8e8;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: width 0.6s, height 0.6s;
+  transform: translate(-50%, -50%);
+}
+.btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 .form-group {
   display: grid;

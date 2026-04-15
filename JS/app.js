@@ -76,17 +76,25 @@ function el(html) {
   return wrapper.firstElementChild;
 }
 
-function renderHeader(title) {
-  header.innerHTML = `<h1>${title}</h1>`;
+function renderHeader(title, route) {
+  document.getElementById('header-title').textContent = title;
+  const indicator = document.getElementById('header-indicator');
+  const colors = {
+    home: '#ACD3F0',
+    mitra: '#F59E0B',
+    produk: '#10B981',
+    akun: '#EF4444'
+  };
+  indicator.style.background = colors[route] || var(--accent);
 }
 
 function renderHome() {
-  renderHeader('Home');
+  renderHeader('Home', 'home');
   setActiveNav('home');
   view.innerHTML = `
     <div class="banner card">
       <div>
-        <strong>Kantin Bu Suryati</strong>
+        <strong>🏪 Selamat Datang di Kantin Bu Suryati</strong>
         <p class="small">Temukan produk lokal favorit Anda.</p>
       </div>
     </div>
@@ -126,7 +134,7 @@ function renderHome() {
 }
 
 function renderProducts() {
-  renderHeader('Produk');
+  renderHeader('Produk', 'produk');
   setActiveNav('produk');
   const categories = Array.from(new Set(state.products.map((p) => p.category)));
   view.innerHTML = `
@@ -171,7 +179,7 @@ function renderProducts() {
 }
 
 function renderPartners() {
-  renderHeader('Mitra');
+  renderHeader('Mitra', 'mitra');
   setActiveNav('mitra');
   view.innerHTML = `
     <div class="card">
@@ -202,7 +210,7 @@ function renderProductDetail(id) {
     view.innerHTML = '<div class="card">Produk tidak ditemukan.</div>';
     return;
   }
-  renderHeader(product.name);
+  renderHeader(product.name, 'produk');
   setActiveNav('');
   const partner = state.partners.find((item) => item.id === product.partnerId);
   view.innerHTML = `
@@ -230,7 +238,7 @@ function renderPartnerDetail(id) {
     view.innerHTML = '<div class="card">Mitra tidak ditemukan.</div>';
     return;
   }
-  renderHeader(partner.name);
+  renderHeader(partner.name, 'mitra');
   setActiveNav('');
   const partnerProducts = state.products.filter((product) => product.partnerId === id);
   view.innerHTML = `
@@ -270,7 +278,7 @@ function renderPartnerDetail(id) {
 }
 
 function renderLogin() {
-  renderHeader('Login');
+  renderHeader('Login', 'akun');
   setActiveNav('akun');
   view.innerHTML = `
     <div class="card">
@@ -302,7 +310,7 @@ function renderLogin() {
 }
 
 function renderRegister() {
-  renderHeader('Register');
+  renderHeader('Register', 'akun');
   setActiveNav('akun');
   view.innerHTML = `
     <div class="card">
@@ -336,7 +344,7 @@ function renderProfile() {
     navigate('login');
     return;
   }
-  renderHeader('Profil');
+  renderHeader('Profil', 'akun');
   setActiveNav('akun');
   view.innerHTML = `
     <div class="card">

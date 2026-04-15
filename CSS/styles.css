@@ -81,7 +81,7 @@ main {
   position: relative;
   overflow: hidden;
 }
-.banner::before {
+.banner::before {b
   content: '';
   position: absolute;
   top: -50%;

@@ -142,13 +142,19 @@ function renderHeader(title, route) {
 }
 
 function renderHome() {
-  renderHeader('Beranda', 'beranda');
-  setActiveNav('beranda');
+  renderHeader('Produk', 'produk');
+  setActiveNav('produk');
   view.innerHTML = `
     <div class="banner card">
       <div>
         <strong class="banner-title">KANTIN BU SURYATI</strong>
         <p class="small">Buka halaman produk dengan cepat dan penuh gaya.</p>
+        <div class="banner-decor">
+          <span>🍎</span>
+          <span>🍔</span>
+          <span>🥤</span>
+          <span>🍰</span>
+        </div>
       </div>
     </div>
     <div class="search-bar">
@@ -190,8 +196,8 @@ function renderHome() {
 }
 
 function renderProducts() {
-  renderHeader('Produk', 'beranda');
-  setActiveNav('beranda');
+  renderHeader('Produk', 'produk');
+  setActiveNav('produk');
   const categories = Array.from(new Set(state.products.map((p) => p.category)));
   view.innerHTML = `
     <div class="card">
@@ -319,7 +325,7 @@ function renderProductDetail(id) {
     view.innerHTML = '<div class="card">Produk tidak ditemukan.</div>';
     return;
   }
-  renderHeader(product.name, 'beranda');
+  renderHeader(product.name, 'produk');
   setActiveNav('');
   const partner = state.partners.find((item) => item.id === product.partnerId);
   view.innerHTML = `
@@ -350,7 +356,7 @@ function renderPartnerDetail(id) {
     view.innerHTML = '<div class="card">Mitra tidak ditemukan.</div>';
     return;
   }
-  renderHeader(partner.name, 'beranda');
+  renderHeader(partner.name, 'produk');
   setActiveNav('');
   const partnerProducts = state.products.filter((product) => product.partnerId === id);
   view.innerHTML = `
@@ -479,7 +485,7 @@ function renderProfile() {
 
 function parseHash() {
   const hash = window.location.hash.replace('#', '');
-  return hash || 'beranda';
+  return hash || 'produk';
 }
 
 function navigate(route) {
@@ -492,7 +498,7 @@ function router() {
     renderProductDetail(route.split('/')[1]);
   } else if (route.startsWith('mitra/')) {
     renderPartnerDetail(route.split('/')[1]);
-  } else if (route === 'beranda' || route === 'home') {
+  } else if (route === 'produk' || route === 'home') {
     renderHome();
   } else if (route === 'keranjang') {
     renderCart();
@@ -525,7 +531,7 @@ window.addEventListener('hashchange', router);
 (async function init() {
   await loadData();
   if (!window.location.hash) {
-    navigate('beranda');
+    navigate('produk');
   } else {
     router();
   }

@@ -69,7 +69,7 @@ main {
   box-shadow: var(--shadow);
 }
 .banner {
-  min-height: 140px;
+  min-height: 160px;
   border-radius: 24px;
   background: linear-gradient(135deg, #60A5FA, #ACD3F0, #93C5FD);
   display: flex;
@@ -78,18 +78,28 @@ main {
   text-align: center;
   color: #ffffff;
   margin-bottom: 18px;
-  position: relative;b
+  position: relative;
   overflow: hidden;
 }
-.banner::before {b
+.banner::before {
   content: '';
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
   animation: pulse 4s ease-in-out infinite;
+}
+.banner::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  bottom: -20px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
 }
 .banner strong {
   display: block;
@@ -119,6 +129,23 @@ main {
   line-height: 1.1;
   text-transform: uppercase;
   animation: heroEntrance 0.8s ease-out both;
+}
+.banner-decor {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  font-size: 24px;
+}
+.banner-decor span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 6px 12px rgba(255, 255, 255, 0.25);
 }
 .click-animate {
   animation: clickPop 0.28s ease-out forwards;
@@ -157,9 +184,17 @@ main {
 }
 .product-list .product:hover,
 .partner-list .partner:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-  box-shadow: 0 12px 30px rgba(172, 211, 240, 0.2);
+  transform: translateY(-2px);
+  border-color: #93C5FD;
+  box-shadow: 0 16px 32px rgba(56, 189, 248, 0.14);
+}
+.product-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  object-fit: cover;
+  background: radial-gradient(circle at top left, #ffffff 0%, #dbeafe 40%, #bfdbfe 100%);
+  border: 2px solid rgba(255, 255, 255, 0.8);
 }
 .grid-item {
   display: block;
@@ -182,8 +217,7 @@ main {
 .grid-item div {
   padding: 14px;
 }
-.partner-thumb,
-.product-thumb {
+.partner-thumb {
   width: 80px;
   height: 80px;
   border-radius: 18px;

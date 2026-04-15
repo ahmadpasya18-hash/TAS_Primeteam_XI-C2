@@ -9,7 +9,9 @@ const DATA_PATHS = {
 const state = {
   products: [],
   partners: [],
-  user: JSON.parse(localStorage.getItem('user') || 'null')
+  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+  history: JSON.parse(localStorage.getItem('history') || '[]')
 };
 
 function setActiveNav(route) {
@@ -76,6 +78,44 @@ async function loadData() {
   }
 }
 
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(state.cart));
+}
+
+function saveHistory() {
+  localStorage.setItem('history', JSON.stringify(state.history));
+}
+
+function addToCart(product) {
+  const existing = state.cart.find((item) => item.id === product.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    state.cart.push({ ...product, quantity: 1 });
+  }
+  saveCart();
+  alert(`${product.name} ditambahkan ke keranjang.`);
+}
+
+function removeFromCart(productId) {
+  state.cart = state.cart.filter((item) => item.id !== productId);
+  saveCart();
+  renderCart();
+}
+
+function checkoutCart() {
+  if (state.cart.length === 0) {
+    alert('Keranjang kosong.');
+    return;
+  }
+  const now = new Date().toLocaleString('id-ID');
+  state.history.push({ purchasedAt: now, items: [...state.cart] });
+  state.cart = [];
+  saveCart();
+  saveHistory();
+  navigate('riwayat');
+}
+
 function el(html) {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
@@ -86,17 +126,17 @@ function renderHeader(title, route) {
   document.getElementById('header-title').textContent = title;
   const indicator = document.getElementById('header-indicator');
   const colors = {
-    home: '#ACD3F0',
-    mitra: '#F59E0B',
-    produk: '#10B981',
-    akun: '#EF4444'
+    beranda: '#ACD3F0',
+    keranjang: '#F59E0B',
+    riwayat: '#10B981',
+    profile: '#8B5CF6'
   };
   indicator.style.background = colors[route] || '#ACD3F0';
 }
 
 function renderHome() {
-  renderHeader('Home', 'home');
-  setActiveNav('home');
+  renderHeader('Beranda', 'beranda');
+  setActiveNav('beranda');
   view.innerHTML = `
     <div class="banner card">
       <div>
@@ -140,8 +180,8 @@ function renderHome() {
 }
 
 function renderProducts() {
-  renderHeader('Produk', 'produk');
-  setActiveNav('produk');
+  renderHeader('Produk', 'beranda');
+  setActiveNav('beranda');
   const categories = Array.from(new Set(state.products.map((p) => p.category)));
   view.innerHTML = `
     <div class="card">
@@ -184,29 +224,79 @@ function renderProducts() {
   renderGrid(state.products);
 }
 
-function renderPartners() {
-  renderHeader('Mitra', 'mitra');
-  setActiveNav('mitra');
+function renderCart() {
+  renderHeader('Keranjang', 'keranjang');
+  setActiveNav('keranjang');
   view.innerHTML = `
     <div class="card">
-      <h2>Daftar mitra</h2>
-      <div class="partner-list" id="partnerList"></div>
+      <h2>Keranjang Anda</h2>
+      <div id="cartList"></div>
+      <div class="actions" id="cartActions"></div>
     </div>
   `;
 
-  const list = document.getElementById('partnerList');
-  state.partners.forEach((partner) => {
-    const item = el(`
-      <div class="partner" data-id="${partner.id}">
-        <div class="partner-thumb"></div>
-        <div class="partner-meta">
-          <h3>${partner.name}</h3>
-          <p>${partner.category}</p>
+  const cartList = document.getElementById('cartList');
+  if (state.cart.length === 0) {
+    cartList.innerHTML = '<p class="small">Keranjang kosong.</p>';
+  } else {
+    state.cart.forEach((item) => {
+      const row = el(`
+        <div class="product">
+          <img class="product-thumb" src="${item.image}" alt="${item.name}" />
+          <div class="product-meta">
+            <h3>${item.name}</h3>
+            <p>${item.price} x ${item.quantity}</p>
+            <button class="btn btn-secondary" data-id="${item.id}">Hapus</button>
+          </div>
         </div>
+      `);
+      row.querySelector('button').addEventListener('click', () => removeFromCart(item.id));
+      cartList.appendChild(row);
+    });
+  }
+
+  const cartActions = document.getElementById('cartActions');
+  cartActions.innerHTML = '<button class="btn btn-primary" id="checkoutButton">Checkout</button>';
+  document.getElementById('checkoutButton').addEventListener('click', checkoutCart);
+}
+
+function renderHistory() {
+  renderHeader('Riwayat', 'riwayat');
+  setActiveNav('riwayat');
+  view.innerHTML = `
+    <div class="card">
+      <h2>Riwayat Pembelian</h2>
+      <div id="historyList"></div>
+    </div>
+  `;
+
+  const historyList = document.getElementById('historyList');
+  if (state.history.length === 0) {
+    historyList.innerHTML = '<p class="small">Belum ada riwayat pembelian.</p>';
+    return;
+  }
+
+  state.history.slice().reverse().forEach((entry) => {
+    const item = el(`
+      <div class="card">
+        <h3>${entry.purchasedAt}</h3>
+        <div class="product-list"></div>
       </div>
     `);
-    item.addEventListener('click', () => navigate(`mitra/${partner.id}`));
-    list.appendChild(item);
+    const productList = item.querySelector('.product-list');
+    entry.items.forEach((cartItem) => {
+      const row = el(`
+        <div class="product">
+          <img class="product-thumb" src="${cartItem.image}" alt="${cartItem.name}" />
+          <div class="product-meta">
+            <h3>${cartItem.name}</h3>
+            <p>${cartItem.price} x ${cartItem.quantity}</p>
+          </div>
+        </div>
+      `);
+      productList.appendChild(row);
+    });
+    historyList.appendChild(item);
   });
 }
 
@@ -216,7 +306,7 @@ function renderProductDetail(id) {
     view.innerHTML = '<div class="card">Produk tidak ditemukan.</div>';
     return;
   }
-  renderHeader(product.name, 'produk');
+  renderHeader(product.name, 'beranda');
   setActiveNav('');
   const partner = state.partners.find((item) => item.id === product.partnerId);
   view.innerHTML = `
@@ -228,7 +318,7 @@ function renderProductDetail(id) {
       <p class="small">Sekolah: ${product.school}</p>
       <div class="actions">
         ${partner ? `<button class="btn btn-secondary" id="partnerButton">Lihat Mitra</button>` : ''}
-        <button class="btn btn-primary" id="orderButton">Pesan</button>
+        <button class="btn btn-primary" id="orderButton">Tambah Keranjang</button>
       </div>
     </div>
   `;
@@ -236,6 +326,9 @@ function renderProductDetail(id) {
   if (partner) {
     document.getElementById('partnerButton').addEventListener('click', () => navigate(`mitra/${partner.id}`));
   }
+  document.getElementById('orderButton').addEventListener('click', () => {
+    addToCart(product);
+  });
 }
 
 function renderPartnerDetail(id) {
@@ -244,7 +337,7 @@ function renderPartnerDetail(id) {
     view.innerHTML = '<div class="card">Mitra tidak ditemukan.</div>';
     return;
   }
-  renderHeader(partner.name, 'mitra');
+  renderHeader(partner.name, 'beranda');
   setActiveNav('');
   const partnerProducts = state.products.filter((product) => product.partnerId === id);
   view.innerHTML = `
@@ -284,8 +377,8 @@ function renderPartnerDetail(id) {
 }
 
 function renderLogin() {
-  renderHeader('Login', 'akun');
-  setActiveNav('akun');
+  renderHeader('Login', 'profile');
+  setActiveNav('profile');
   view.innerHTML = `
     <div class="card">
       <h2>Masuk</h2>
@@ -316,8 +409,8 @@ function renderLogin() {
 }
 
 function renderRegister() {
-  renderHeader('Register', 'akun');
-  setActiveNav('akun');
+  renderHeader('Register', 'profile');
+  setActiveNav('profile');
   view.innerHTML = `
     <div class="card">
       <h2>Daftar</h2>
@@ -350,8 +443,8 @@ function renderProfile() {
     navigate('login');
     return;
   }
-  renderHeader('Profil', 'akun');
-  setActiveNav('akun');
+  renderHeader('Profil', 'profile');
+  setActiveNav('profile');
   view.innerHTML = `
     <div class="card">
       <h2>Halo, ${state.user.name}</h2>
@@ -370,7 +463,7 @@ function renderProfile() {
 
 function parseHash() {
   const hash = window.location.hash.replace('#', '');
-  return hash || 'home';
+  return hash || 'beranda';
 }
 
 function navigate(route) {
@@ -383,12 +476,12 @@ function router() {
     renderProductDetail(route.split('/')[1]);
   } else if (route.startsWith('mitra/')) {
     renderPartnerDetail(route.split('/')[1]);
-  } else if (route === 'home') {
+  } else if (route === 'beranda' || route === 'home') {
     renderHome();
-  } else if (route === 'produk') {
-    renderProducts();
-  } else if (route === 'mitra') {
-    renderPartners();
+  } else if (route === 'keranjang') {
+    renderCart();
+  } else if (route === 'riwayat') {
+    renderHistory();
   } else if (route === 'login') {
     renderLogin();
   } else if (route === 'register') {
@@ -403,7 +496,7 @@ function router() {
 document.querySelectorAll('.nav-btn').forEach((button) => {
   button.addEventListener('click', () => {
     const route = button.dataset.route;
-    if (route === 'akun' && !state.user) {
+    if (route === 'profile' && !state.user) {
       navigate('login');
       return;
     }
@@ -416,7 +509,7 @@ window.addEventListener('hashchange', router);
 (async function init() {
   await loadData();
   if (!window.location.hash) {
-    navigate('home');
+    navigate('beranda');
   } else {
     router();
   }

@@ -78,7 +78,7 @@ main {
   text-align: center;
   color: #ffffff;
   margin-bottom: 18px;
-  position: relative;
+  position: relative;b
   overflow: hidden;
 }
 .banner::before {b
@@ -101,6 +101,27 @@ main {
 @keyframes pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+@keyframes clickPop {
+  0% { transform: scale(1); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08); }
+  40% { transform: scale(1.05) rotate(-1deg); box-shadow: 0 16px 25px rgba(15, 23, 42, 0.16); }
+  100% { transform: scale(1); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12); }
+}
+@keyframes heroEntrance {
+  0% { opacity: 0; transform: translateY(16px) scale(0.98); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.banner-title {
+  display: inline-block;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  animation: heroEntrance 0.8s ease-out both;
+}
+.click-animate {
+  animation: clickPop 0.28s ease-out forwards;
 }
 .search-bar {
   display: flex;

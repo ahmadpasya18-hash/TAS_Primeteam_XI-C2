@@ -91,7 +91,7 @@ function renderHeader(title, route) {
     produk: '#10B981',
     akun: '#EF4444'
   };
-  indicator.style.background = colors[route] || var(--accent);
+  indicator.style.background = colors[route] || '#ACD3F0';
 }
 
 function renderHome() {
@@ -415,14 +415,9 @@ window.addEventListener('hashchange', router);
 
 (async function init() {
   await loadData();
-  // Show splash for 3 seconds
-  setTimeout(() => {
-    document.getElementById('splash').style.display = 'none';
-    document.getElementById('app').classList.remove('hidden');
-    if (!window.location.hash) {
-      navigate('home');
-    } else {
-      router();
-    }
-  }, 3000);
+  if (!window.location.hash) {
+    navigate('home');
+  } else {
+    router();
+  }
 })();

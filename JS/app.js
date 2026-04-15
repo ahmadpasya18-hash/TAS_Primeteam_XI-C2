@@ -86,6 +86,13 @@ function saveHistory() {
   localStorage.setItem('history', JSON.stringify(state.history));
 }
 
+function animateClick(element) {
+  element.classList.add('click-animate');
+  element.addEventListener('animationend', () => {
+    element.classList.remove('click-animate');
+  }, { once: true });
+}
+
 function addToCart(product) {
   const existing = state.cart.find((item) => item.id === product.id);
   if (existing) {
@@ -140,8 +147,8 @@ function renderHome() {
   view.innerHTML = `
     <div class="banner card">
       <div>
-        <strong>🏪 Selamat Datang di Kantin Bu Suryati</strong>
-        <p class="small">Temukan produk lokal favorit Anda.</p>
+        <strong class="banner-title">KANTIN BU SURYATI</strong>
+        <p class="small">Buka halaman produk dengan cepat dan penuh gaya.</p>
       </div>
     </div>
     <div class="search-bar">
@@ -166,7 +173,10 @@ function renderHome() {
           </div>
         </div>
       `);
-      item.addEventListener('click', () => navigate(`product/${product.id}`));
+      item.addEventListener('click', () => {
+        animateClick(item);
+        setTimeout(() => navigate(`product/${product.id}`), 120);
+      });
       list.appendChild(item);
     });
   };
@@ -204,7 +214,10 @@ function renderProducts() {
           </div>
         </div>
       `);
-      card.addEventListener('click', () => navigate(`product/${product.id}`));
+      card.addEventListener('click', () => {
+        animateClick(card);
+        setTimeout(() => navigate(`product/${product.id}`), 120);
+      });
       grid.appendChild(card);
     });
   };
@@ -371,7 +384,10 @@ function renderPartnerDetail(id) {
         </div>
       </div>
     `);
-    item.addEventListener('click', () => navigate(`product/${product.id}`));
+    item.addEventListener('click', () => {
+      animateClick(item);
+      setTimeout(() => navigate(`product/${product.id}`), 120);
+    });
     grid.appendChild(item);
   });
 }
